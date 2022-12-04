@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <link rel="stylesheet" href="wykres.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wykresy</title>
+</head>
+<body>
+    <div class='contener'>
+        <section class='text'>
+            <span>Opady Deszczu w Polsce</span>
+        </section>
+        <section class='can'>
+            <canvas id='canvas' width="680" height= "350"></canvas>
+        </section>
+        <section class='inputy'>
+            <label for="liczba">Wpisz liczbe:</label>
+            <input type="number" step='1' min='1' max='200' name="liczba" id="inp" title='Maks wartość: 200'>
+            <button onclick='dodaj()' class='btn' id='btndodaj'>Zatwierdź</button>
+            <button value="Reload Page" onClick="window.location.reload(true)" class='btn' id='btnwyczysc'>Wyczyść</button>
+            <p id='wpisaneLiczby'>Liczby:</p>
+        </section>
+    </div>
+</body>
+</html>
+<script>
+//canvas
+        var canvas = document.getElementById("canvas");
+        var ctx =canvas.getContext("2d");
+//linia lewa
+        var liniaL = ctx;
+            liniaL.strokeStyle= "white";
+            liniaL.lineWidth=3;
+            liniaL.moveTo(35,30);
+            liniaL.lineTo(35,300);
+            liniaL.stroke();
+//linia dol
+        var liniaD = ctx;
+            liniaD.strokeStyle= "white";
+            liniaD.lineWidth=3;
+            liniaD.moveTo(33,301);
+            liniaD.lineTo(645,301);
+            liniaD.stroke();
+//miesiace
+x = 35;
+y= 330;
+    var tekst = ctx;
+        tekst.fillStyle ="white";
+        tekst.font= "14px Arial";
+            const miesiace= ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","I"];
+                for(i=0; i < miesiace.length; i++){
+                    tekst.fillText(miesiace[i],x,y);
+                    x+= 50;
+                }
+//skala opadów
+xs = 5;
+ys = 300;
+    var skala = ctx;
+        skala.fillStyle ="white";
+        skala.font= "14px Arial";
+        const skalaliczb = ["    0","  50","100","150","200"]
+                for(s=0;s<skalaliczb.length;s++){
+                    skala.fillText(skalaliczb[s],xs,ys);
+                    ys-= 50;
+                }
+//tablica opadów
+ const tab = []; //29,90,50,70,32,100,65,42,89,46,34,69
+//wykres
+function rysuj(){
+    z = 85;
+    zy = 85;
+    linia0 =300;
+    var wykres = ctx;
+    var wykresLiczba = ctx;
+        wykres.strokeStyle = 'white';
+        wykresLiczba.fillStyle='white';
+        var linie = ctx;
+        linie.lineWidth=2;
+        linie.strokeStyle= "lawngreen";
+        lx1=35;
+        ly1=300;
+        lx2=85;
+            for(o=0; o < tab.length; o++){
+            //kropki
+                wartosc=linia0-tab[o];
+                wykres.beginPath();
+                wykres.arc(z,wartosc,3,0,2 * Math.PI);
+                wykres.stroke();  
+            //liczby nad kropkami
+                    liczba = wartosc - 17;
+                    wykresLiczba.fillText(tab[o],zy,liczba)
+                    z+= 50; 
+                    zy+= 48;
+                //linie do kropek 
+                        ly2=300-tab[o]; 
+                            linie.moveTo(lx1,ly1);
+                            linie.lineTo(lx2,ly2);
+                            linie.stroke();
+                                lx1+=50;
+                                lx2+=50;
+                                ly1= 300 -tab[o];
+            }        
+}      
+//dodawanie liczb
+function dodaj(){
+    var inp = document.getElementById('inp').value;
+        if(inp == ''){
+            document.getElementById('wpisaneLiczby').innerHTML = "Liczby: "+ tab;
+        }                   
+            else if(inp > 200){
+                alert("Maksymalna wartość to 200");
+            }
+                else if(tab.length > 11){
+                    document.getElementById('btndodaj').style.opacity='0.2';
+                        document.getElementById('wpisaneLiczby').innerHTML = "Liczby: "+ tab;
+                }
+                    else{  
+                        tab.push(inp);
+                        document.getElementById('wpisaneLiczby').innerHTML = "Liczby: "+ tab;
+                        rysuj();
+                    }
+}
+
+                
+
+   
+
+
+
+</script>
